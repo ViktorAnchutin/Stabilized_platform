@@ -150,7 +150,7 @@ float angle_init , error_angle_last, sine_init, cos_init;
 
 void FOC_InitPosition(void) // establishing zero position, d-axis directed to A winding, theta = 90
 {
-	/*
+	
 	if(CALIBRATION)
 	{
 	Vq=3;
@@ -184,15 +184,15 @@ void FOC_InitPosition(void) // establishing zero position, d-axis directed to A 
 		
 	angle_init = 238.066;
 	
-	} */
+	} 
 
-	angle_init = 238.066;
+	
 }
 	
 
-
-
-float error_in_proc, er_mem, angle_mem,integral;
+extern uint8_t dif_ready;
+ float dif;
+float error_in_proc, er_mem, angle_mem,integral ;
 
 void FOC(float angle, float error_angle, float K_p, float K_d, float K_I, uint32_t dt)
 {
@@ -220,8 +220,17 @@ void FOC(float angle, float error_angle, float K_p, float K_d, float K_I, uint32
 		er_mem = error_angle;
 		angle_mem = angle;
 	}
-	integral = dt*0.000001*error_angle_last+integral;
-	Vq = K_p*error_angle ;//+ ((error_angle - error_angle_last)/(dt*0.000001))*K_d + integral*K_I; //Speed; //
+	
+	
+		if(dif_ready)
+	{
+		dif = error_angle - error_angle_last;
+		error_angle_last = error_angle;
+		dif_ready=0;
+	}
+	//integral = dt*0.000001*error_angle_last+integral;
+	dif = (error_angle - error_angle_last)*K_d;
+	Vq = K_p*error_angle + (dif) ;//+ integral*K_I; //Speed; ////arm_pid_f32(&pid, error_angle);
 	error_angle_last = error_angle;
 	
 	
@@ -295,7 +304,7 @@ void sinus_control(float des_val_)
 uint8_t started;
 float step, step2;
 
-void sinus_control_V2(float error_angle)
+void sinus_control_V2(float error_angle, float V, float K, float step_max)
 {
 	
 	
@@ -327,9 +336,9 @@ void sinus_control_V2(float error_angle)
 	Vc_1 = arm_cos_f32(theta + 2.0943951023931954923084289221863);//cos(theta + 2.0943951023931954923084289221863);
 	
 	
-	Va = Va_1 * Vq; // projection calculation of Vq into A phase
-	Vb = Vb_1 * Vq; // projection calculation of Vq into B phase
-	Vc = Vc_1 * Vq; // projection calculation of Vq into C phase
+	Va = Va_1 * V; // projection calculation of Vq into A phase
+	Vb = Vb_1 * V; // projection calculation of Vq into B phase
+	Vc = Vc_1 * V; // projection calculation of Vq into C phase
 	
 	Vinv1 = Va + 6; // Obtaining value for invertor, +6 because Vinv relates with V_phase as Vinv = Vphase + Vdc/2 in order to avoid negative values for invertor voltage.
 	Vinv2 = Vb + 6; // should also be taken into account that Vphase(max) = Vdc/2 (with sine PWM) 
@@ -344,15 +353,15 @@ void sinus_control_V2(float error_angle)
 	
 	
 	
-	step = error_angle*0.001;
+	step = error_angle*K;
 	
-	if(step>0.01) { step=0.01;}
-	if(step< -0.01) {step=-0.01; }
+	if(step>step_max) { step=step_max;}
+	if(step< -step_max) {step=-step_max; }
 	
 	theta = theta+step;
 	
 	
-	Vq=3;
+
 	
 	
 	Va_1 = arm_cos_f32(theta);//cos(theta         );     
@@ -360,9 +369,9 @@ void sinus_control_V2(float error_angle)
 	Vc_1 = arm_cos_f32(theta + 2.0943951023931954923084289221863);//cos(theta + 2.0943951023931954923084289221863);
 	
 	
-	Va = Va_1 * Vq; // projection calculation of Vq into A phase
-	Vb = Vb_1 * Vq; // projection calculation of Vq into B phase
-	Vc = Vc_1 * Vq; // projection calculation of Vq into C phase
+	Va = Va_1 * V; // projection calculation of Vq into A phase
+	Vb = Vb_1 * V; // projection calculation of Vq into B phase
+	Vc = Vc_1 * V; // projection calculation of Vq into C phase
 	
 	Vinv1 = Va + 6; // Obtaining value for invertor, +6 because Vinv relates with V_phase as Vinv = Vphase + Vdc/2 in order to avoid negative values for invertor voltage.
 	Vinv2 = Vb + 6; // should also be taken into account that Vphase(max) = Vdc/2 (with sine PWM) 
@@ -390,7 +399,7 @@ extern float sin_x, cos_x, tv_g, t_g, t_d;
 float thetta_vector;
 
 
-void combined_control_V3(float angle, float error_angle, float K_p, float K_d, float K_I, uint32_t dt)
+void combined_control_V3(float angle, float error_angle, float V, float K, float step_max)
 {
 	
 	
@@ -430,11 +439,11 @@ void combined_control_V3(float angle, float error_angle, float K_p, float K_d, f
 	Vc_1 = arm_cos_f32(thetta_vector + 2.0943951023931954923084289221863);//cos(theta + 2.0943951023931954923084289221863);
 	
 		
-		Vq = 6;
 	
-	Va = Va_1 * Vq; // projection calculation of Vq into A phase
-	Vb = Vb_1 * Vq; // projection calculation of Vq into B phase
-	Vc = Vc_1 * Vq; // projection calculation of Vq into C phase
+	
+	Va = Va_1 * V; // projection calculation of Vq into A phase
+	Vb = Vb_1 * V; // projection calculation of Vq into B phase
+	Vc = Vc_1 * V; // projection calculation of Vq into C phase
 	
 	Vinv1 = Va + 6; // Obtaining value for invertor, +6 because Vinv relates with V_phase as Vinv = Vphase + Vdc/2 in order to avoid negative values for invertor voltage.
 	Vinv2 = Vb + 6; // should also be taken into account that Vphase(max) = Vdc/2 (with sine PWM) 
@@ -461,14 +470,14 @@ void combined_control_V3(float angle, float error_angle, float K_p, float K_d, f
 	
 	
 	
-	step = error_angle*0.001;
+	step = error_angle*K;
 //	step = error_angle*0.02;
 	//step2 = step;
 	//theta_elec_degrees = ((err)*11 + 90 ); // 11 - pole pairs (22P). + 90 because at initial position theta = 90  
 	
 	
-	if(step>0.006) { step=0.006;}
-	if(step< -0.006) {step=-0.006; }
+	if(step>step_max) { step=step_max;}
+	if(step< -step_max) {step=-step_max; }
 	
 	thetta_vector = thetta_vector+step;
 	
@@ -514,7 +523,7 @@ void combined_control_V3(float angle, float error_angle, float K_p, float K_d, f
 	
 	
 	
-	Vq=3;
+	
 	
 	
 	Va_1 = arm_cos_f32(thetta_vector);//cos(theta         );     
@@ -522,9 +531,9 @@ void combined_control_V3(float angle, float error_angle, float K_p, float K_d, f
 	Vc_1 = arm_cos_f32(thetta_vector + 2.0943951023931954923084289221863);//cos(theta + 2.0943951023931954923084289221863);
 	
 	
-	Va = Va_1 * Vq; // projection calculation of Vq into A phase
-	Vb = Vb_1 * Vq; // projection calculation of Vq into B phase
-	Vc = Vc_1 * Vq; // projection calculation of Vq into C phase
+	Va = Va_1 * V; // projection calculation of Vq into A phase
+	Vb = Vb_1 * V; // projection calculation of Vq into B phase
+	Vc = Vc_1 * V; // projection calculation of Vq into C phase
 	
 	Vinv1 = Va + 6; // Obtaining value for invertor, +6 because Vinv relates with V_phase as Vinv = Vphase + Vdc/2 in order to avoid negative values for invertor voltage.
 	Vinv2 = Vb + 6; // should also be taken into account that Vphase(max) = Vdc/2 (with sine PWM) 
