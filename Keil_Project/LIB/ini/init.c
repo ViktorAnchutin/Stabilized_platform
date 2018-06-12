@@ -283,7 +283,7 @@ void TIM2_ini(void)
 	
 	TIM_TimeBaseInitTypeDef timer2_init;
 	TIM_TimeBaseStructInit(&timer2_init);
-	timer2_init.TIM_Period = 42000-1;// ---> 100 microsec
+	timer2_init.TIM_Period = 42000-1;// ---> 1000 microsec
 	timer2_init.TIM_Prescaler = 2-1; // ---> 42 MHz
 	TIM_TimeBaseInit(TIM2, &timer2_init);
 	

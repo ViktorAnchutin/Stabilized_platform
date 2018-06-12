@@ -182,7 +182,7 @@ void FOC_InitPosition(void) // establishing zero position, d-axis directed to A 
 	
 	// init angle was calculated once. Now it is used like starting point for electrical angles and engine does not need position initialization
 		
-	angle_init = 238.066;
+	angle_init = 51.3945503;
 	
 	} 
 

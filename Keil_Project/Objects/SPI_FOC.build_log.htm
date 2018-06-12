@@ -21,31 +21,16 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.1.0
 Dialog DLL:      TCM.DLL V1.32.0.0
  
 <h2>Project:</h2>
-D:\MEGA cloud\GitHub\BLDC control\Keil_Project\SPI_FOC.uvprojx
+D:\MEGA cloud\GitHub\Stabilized_platform\Keil_Project\SPI_FOC.uvprojx
 Project File Date:  01/30/2018
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling main.c...
-main.c(129): warning:  #223-D: function "user_button_init" declared implicitly
-  	user_button_init();
-main.c(150): warning:  #223-D: function "I2cMaster_Init" declared implicitly
-    I2cMaster_Init();
-main.c(151): warning:  #223-D: function "mpu_ini" declared implicitly
-  	mpu_ini();
-main.c(199): warning:  #223-D: function "ST_Sensors_I2C_ReadRegister" declared implicitly
-  			ST_Sensors_I2C_ReadRegister(MPU_6050_addr, 0x43, 2, gyro_data );
-main.c(337): warning:  #223-D: function "ST_Sensors_I2C_ReadRegister" declared implicitly
-  			ST_Sensors_I2C_ReadRegister(MPU_6050_addr, 0x43, 2, gyro_data );	
-main.c(340): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-  			angle_pitch_gyro += ((gyro_x_1)/16.4)*0.001;	
-main.c(483): warning:  #1-D: last line of file ends without a newline
-  	
-main.c: 7 warnings, 0 errors
+compiling mylib.c...
 linking...
-Program Size: Code=18044 RO-data=2636 RW-data=644 ZI-data=62076  
-".\Objects\SPI_FOC.axf" - 0 Error(s), 7 Warning(s).
+Program Size: Code=19716 RO-data=2716 RW-data=644 ZI-data=62500  
+".\Objects\SPI_FOC.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 

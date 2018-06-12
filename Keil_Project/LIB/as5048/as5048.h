@@ -54,7 +54,13 @@ typedef struct
 */
 	
 
-
+typedef struct
+{
+	float buf[3]; // buffer
+	uint8_t i_m; // counter
+	uint8_t ready; // ready flag
+	float middle; // result/output
+} MedianFilter;
 
 
 
@@ -68,3 +74,4 @@ float get_angle_once(void);
 float  SecondOrder_average(void);
 float ThirdOrder_average(void);
 float CQ_average_angle(void);
+float	median(float input, MedianFilter* filter);

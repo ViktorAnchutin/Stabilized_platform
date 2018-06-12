@@ -135,7 +135,7 @@ int main(void)
 	
 	PWM_INx_init();
 	ENx_init();
-	ADC_initt();
+	//ADC_initt();
 	Set_nRes_nSleep();
 	Set_ENx();
 	FOC_InitPosition();
@@ -163,25 +163,25 @@ TIM4->CCR1 = 0  ;
 	TIM4->CCR1 = 500 ;
 	
 		TIM4->ARR = 1400000;		
-		myDelay_ms(500);		
+		myDelay_ms(200);		
 		TIM4->ARR = 0;
-		myDelay_ms(500);
+		myDelay_ms(200);
 		TIM4->ARR = 1400000;		
-		myDelay_ms(500);	
+		myDelay_ms(200);	
 		TIM4->ARR = 0;
-		myDelay_ms(500);
+		myDelay_ms(200);
 		TIM4->ARR = 1400000;		
-		myDelay_ms(500);
+		myDelay_ms(200);
 		TIM4->ARR = 0;
-		myDelay_ms(500);
+		myDelay_ms(200);
 		TIM4->ARR = 1400000;
-		myDelay_ms(500);
+		myDelay_ms(200);
 		TIM4->ARR = 0;
-		myDelay_ms(500);
+		myDelay_ms(200);
 		TIM4->ARR = 1400000;
 		
     TIM4->CCR1 = 0 ;		
-		myDelay_ms(1000);
+		myDelay_ms(100);
 		
 //----------------------		
 		
@@ -196,6 +196,8 @@ TIM4->CCR1 = 0  ;
 				
 				
 				t1 = TIM5->CNT;
+				
+				
 			ST_Sensors_I2C_ReadRegister(MPU_6050_addr, 0x43, 2, gyro_data );
 		
 					
@@ -218,6 +220,20 @@ TIM4->CCR1 = 0  ;
 			gyro_x_cor = (float)gyro_x_cor_sum/1000;                                                 
 		//	gyro_y_cor = (float)gyro_y_cor_sum/1000;                                                 
 		//	gyro_z_cor = (float)gyro_z_cor_sum/1000;
+			
+			
+			// get initaial position of the platform
+			ST_Sensors_I2C_ReadRegister(MPU_6050_addr, 0x3B, 6, accel_data );	
+			acc_x = accel_data[0]<<8 | accel_data[1];
+			acc_y = accel_data[2]<<8 | accel_data[3];	
+			acc_z = accel_data[4]<<8 | accel_data[5];	
+			acc_total_vector = sqrt((((float)acc_x)*((float)acc_x))+(((float)acc_y)*((float)acc_y))+(((float)acc_z)*((float)acc_z)));  //Calculate the total accelerometer vector
+  //57.296 = 1 / (3.142 / 180) The Arduino asin function is in radians
+				//angle_roll_acc = asin((float)acc_x/acc_total_vector)* -57.296; 
+				angle_pitch_acc = asin((float)acc_y/acc_total_vector)* 57.296; 
+			
+			
+			
 			
 			started_MPU6050 = 1; //
 			
@@ -246,7 +262,7 @@ TIM4->ARR = PWM_period-1;
 TIM2_ini(); //IMU cycle timer / 1000 microsec
 
 
-ready=1; // ready flag
+
 
 #endif
 
@@ -337,6 +353,13 @@ void TIM1_UP_TIM10_IRQHandler(void)
 			ST_Sensors_I2C_ReadRegister(MPU_6050_addr, 0x43, 2, gyro_data );	
 			gyro_x = (uint16_t)gyro_data[0]<<8 | (uint16_t)gyro_data[1];	
 			gyro_x_1 = (float)gyro_x - gyro_x_cor;
+				
+			if(!ready)
+			{
+				angle_pitch_gyro = angle_pitch_acc;
+				ready=1; // ready flag
+			}
+					
 			angle_pitch_gyro += ((gyro_x_1)/16.4)*0.001;	
 				
 				

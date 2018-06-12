@@ -118,6 +118,7 @@ void encoder_as5048_SPI3(void)
 	
 	
 	
+	MedianFilter filter1, filter2, filter3,filter4, filter5, filter6, filter7, filter8, filter9, filter10, filter11, filter12, filter13, filter14, filter15, filter16, filter17, filter18, filter19,filter20, filter21;
 	
 	uint32_t counter_;
  	uint16_t MODF;
@@ -186,6 +187,35 @@ void encoder_as5048_SPI3(void)
 	//angle = (float)(ResData2 & 0x3FFF)*0.021973997;	
 		angle_return = (float)(ResData2 & 0x3FFF);
 		angle_return = angle_return*0.021973997;
+		
+		
+		//median filter
+		
+		angle_return = median(angle_return, &filter1); // median filter
+		angle_return = median(angle_return, &filter2); // median filter
+		angle_return = median(angle_return, &filter3); // median filter
+		angle_return = median(angle_return, &filter4); // median filter
+		angle_return = median(angle_return, &filter5); // median filter
+		angle_return = median(angle_return, &filter6); // median filter
+		
+		/*
+		angle_return = median(angle_return, &filter7);
+		angle_return = median(angle_return, &filter8);
+		angle_return = median(angle_return, &filter9);
+		angle_return = median(angle_return, &filter10);
+		angle_return = median(angle_return, &filter11);
+		
+		
+		angle_return = median(angle_return, &filter12);
+		angle_return = median(angle_return, &filter13);
+		angle_return = median(angle_return, &filter14);
+		angle_return = median(angle_return, &filter15);
+		angle_return = median(angle_return, &filter16);
+		*/
+		
+		
+		
+		
 	return 	angle_return;//(float)(ResData2 & 0x3FFF)*0.021973997;	
 			
 			
@@ -562,3 +592,48 @@ void encoder_as5048_SPI3(void)
 	}
 	
 	*/
+	
+	
+	
+		float	median(float input, MedianFilter* filter)
+	{
+		if(!filter->ready)
+		{
+			filter->buf[filter->i_m] = input;
+			filter->i_m++;
+			filter->middle = input;
+			
+			if(filter->i_m >= 3) 
+				{
+					
+					filter->ready=1;
+					filter->i_m=0;
+				}
+		}
+		else
+		{
+			
+			filter->buf[filter->i_m] = input;
+			filter->i_m++;
+			if(filter->i_m >=3) filter->i_m = 0;
+				
+			
+		
+		 if ((filter->buf[0] <= filter->buf[1]) && (filter->buf[0] <= filter->buf[2]))
+			{
+				filter->middle = (filter->buf[1] <= filter->buf[2]) ? filter->buf[1] : filter->buf[2];
+			}
+		else if ((filter->buf[1] <= filter->buf[0]) && (filter->buf[1] <= filter->buf[2]))
+			{
+				filter->middle = (filter->buf[0] <= filter->buf[2]) ? filter->buf[0] : filter->buf[2];
+			}
+		else
+			{
+				filter->middle = (filter->buf[0] <= filter->buf[1]) ? filter->buf[0] : filter->buf[1];
+			}
+		return filter->middle;
+			
+			
+			
+		}
+	}	
