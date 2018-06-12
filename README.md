@@ -17,7 +17,6 @@
 
 
 ### Функциональная схема всего макета
-![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/Функциональная_схема_стенда.png)
-
+![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/Функциональная_схема_стенда.JPG)
 
 
