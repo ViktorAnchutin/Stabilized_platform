@@ -9,4 +9,4 @@
 
 
 ### Схема работы цифровой системы управления
-![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/Схема ЦСУ.png)
+![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/схема_ЦСУ.png)
