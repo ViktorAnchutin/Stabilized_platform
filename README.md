@@ -5,13 +5,13 @@
 [![Watch the video](https://img.youtube.com/vi/-Q5NkLSsyHE/0.jpg)](https://www.youtube.com/watch?v=-Q5NkLSsyHE)
 
 
-[![Watch the video](https://img.youtube.com/vi/sDWJxULtcOI/0.jpg)](https://www.youtube.com/watch?v=sDWJxULtcOI)
+[![Watch the video](https://img.youtube.com/vi/sDWJxULtcOI/0.jpg)](https://www.youtube.com/watch?v=sDWJxULtcOI)      
 
 
 
 
 ### Схема работы цифровой системы управления
-![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/схема_ЦСУ.png)
+![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/схема_ЦСУ.png)      
 
 
 
