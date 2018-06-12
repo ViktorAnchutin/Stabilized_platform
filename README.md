@@ -10,13 +10,13 @@
 
 
 
-    ### Схема работы цифровой системы управления
+   ### Схема работы цифровой системы управления
 ![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/схема_ЦСУ.png)      
 
 
 
 
-    ### Функциональная схема всего макета
+   ### Функциональная схема всего макета
 ![Image alt](https://github.com/ViktorAnchutin/Stabilized_platform/raw/master/pictures/Функциональная_схема_стенда.JPG)
 
 
